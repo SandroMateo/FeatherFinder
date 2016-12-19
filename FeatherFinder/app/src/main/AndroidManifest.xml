@@ -16,7 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -32,13 +36,9 @@
 
         <activity
             android:name=".ui.FeatherMapActivity"
-            android:label="@string/title_activity_feather_map">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:label="@string/title_activity_feather_map" />
+        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.CreateUserActivity"></activity>
     </application>
 
 </manifest>
