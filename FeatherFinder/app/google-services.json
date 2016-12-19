@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "822504221242",
+    "firebase_url": "https://featherfinder-3a974.firebaseio.com",
+    "project_id": "featherfinder-3a974",
+    "storage_bucket": "featherfinder-3a974.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822504221242:android:2deed572acf7b41c",
+        "android_client_info": {
+          "package_name": "com.epicodus.featherfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "822504221242-tdc60foko1ms6v5cretqq0manfmbos2k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.epicodus.featherfinder",
+            "certificate_hash": "B248F4F10B53D14CEF11A994B65962B29E288098"
+          }
+        },
+        {
+          "client_id": "822504221242-ctq3t7tmr14bm3eth4hjm5vtqa7pf0u2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVLy6mP3ZxozdbCtr3moswyvK_O93fEGc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "822504221242-ctq3t7tmr14bm3eth4hjm5vtqa7pf0u2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
