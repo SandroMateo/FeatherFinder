@@ -17,4 +17,12 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/imageView2" />
+
+    <Button
+        android:text="Log Bird"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/logBirdButton" />
 </RelativeLayout>
