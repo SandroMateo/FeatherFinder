@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG = LoginActivity.class.getSimpleName();
 
     @Bind(R.id.passwordLoginButton) Button mPasswordLoginButton;
@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         if(v == mPasswordLoginButton) {
             loginWithPassword();
         } else if(v == mRegisterTextView) {
-            Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+            Intent intent = new Intent(LoginActivity.this, CreateUserActivity.class);
             startActivity(intent);
             finish();
         }

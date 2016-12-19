@@ -34,7 +34,7 @@
             android:textAlignment="center"
             android:textColor="@android:color/black"
             android:layout_marginBottom="5dp"
-            android:id="@+id/loginTextView"/>
+            android:id="@+id/textView1"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -69,6 +69,6 @@
             android:layout_height="wrap_content"
             android:text="Don't Have an account? Create one here!"
             android:textSize="10sp"
-            android:id="@+id/regisetTextView"/>
+            android:id="@+id/registerTextView"/>
     </LinearLayout>
 </RelativeLayout>

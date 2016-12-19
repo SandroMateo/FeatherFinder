@@ -24,7 +24,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CreateUserActivity extends AppCompatActivity {
+public class CreateUserActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG = CreateUserActivity.class.getSimpleName();
 
     @Bind(R.id.createUserButton) Button mCreateUserButton;
