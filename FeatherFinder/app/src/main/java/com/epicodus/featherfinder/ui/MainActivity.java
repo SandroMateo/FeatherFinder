@@ -9,15 +9,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.epicodus.featherfinder.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    @Bind(R.id.logBirdButton) Button mLogBirdButton;
+    @Bind(R.id.takePhotoImageView) ImageView mTakePhotoImageView;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
@@ -26,9 +28,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         mAuth = FirebaseAuth.getInstance();
-        mLogBirdButton.setOnClickListener(this);
+        mTakePhotoImageView.setOnClickListener(this);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if(v == mLogBirdButton) {
+        if(v == mTakePhotoImageView) {
             Intent intent = new Intent(MainActivity.this, LogBirdActivity.class);
             startActivity(intent);
         }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_log_bird"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.epicodus.featherfinder.ui.LogBirdActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout2">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="Order"
+                android:ems="10"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/birdOrderEditText" />
+
+            <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="Family"
+                android:ems="10"
+                android:layout_alignParentRight="true"
+                android:layout_alignRight="@+id/birdOrderEditText"
+                android:layout_alignEnd="@+id/birdOrderEditText"
+                android:id="@+id/birdFamilyEditText" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
