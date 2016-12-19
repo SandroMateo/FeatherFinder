@@ -1,6 +1,8 @@
 package com.epicodus.featherfinder.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +21,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    static final int REQUEST_IMAGE_CAPTURE = 111;
+
     @Bind(R.id.takePhotoImageView) ImageView mTakePhotoImageView;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -78,7 +82,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v == mTakePhotoImageView) {
+            onLaunchCamera();
+        }
+    }
+
+    public void onLaunchCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
             Intent intent = new Intent(MainActivity.this, LogBirdActivity.class);
+            intent.putExtra("image", imageBitmap);
             startActivity(intent);
         }
     }

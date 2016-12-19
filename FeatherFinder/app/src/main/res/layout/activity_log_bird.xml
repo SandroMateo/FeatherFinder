@@ -1,45 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_log_bird"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.epicodus.featherfinder.ui.LogBirdActivity">
 
-    <LinearLayout
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:srcCompat="@drawable/background2"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/birdSightImageView" />
+
+    <TextView
+        android:text="Sighting Details"
+        android:textSize="30sp"
+        android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/linearLayout2">
+        android:layout_below="@+id/birdSightImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:id="@+id/textView2" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="16dp"
+        android:id="@+id/birdOrderEditText"
+        android:hint="Order"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-            <EditText
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="Order"
-                android:ems="10"
-                android:layout_alignParentLeft="true"
-                android:id="@+id/birdOrderEditText" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/birdFamilyEditText"
+        android:hint="Family"
+        android:layout_alignBaseline="@+id/birdOrderEditText"
+        android:layout_alignBottom="@+id/birdOrderEditText"
+        android:layout_toRightOf="@+id/birdSightImageView"
+        android:layout_toEndOf="@+id/birdSightImageView" />
 
-            <EditText
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="Family"
-                android:ems="10"
-                android:layout_alignParentRight="true"
-                android:layout_alignRight="@+id/birdOrderEditText"
-                android:layout_alignEnd="@+id/birdOrderEditText"
-                android:id="@+id/birdFamilyEditText" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="19dp"
+        android:id="@+id/birdGenusEditText"
+        android:hint="Genus"
+        android:layout_below="@+id/birdOrderEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignTop="@+id/birdGenusEditText"
+        android:layout_alignLeft="@+id/birdFamilyEditText"
+        android:layout_alignStart="@+id/birdFamilyEditText"
+        android:id="@+id/birdSpeciesEditText"
+        android:hint="Species" />
 
-        </RelativeLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/birdDescriptionEditText"
+        android:hint="Description"
+        android:layout_below="@+id/birdGenusEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:layout_below="@+id/birdDescriptionEditText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:id="@+id/birdDetailsEditText"
+        android:hint="More Details" />
 
-    </LinearLayout>
+    <Button
+        android:text="Record Sighting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/button2" />
 
 </RelativeLayout>

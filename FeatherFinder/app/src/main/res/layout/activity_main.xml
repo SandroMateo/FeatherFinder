@@ -7,56 +7,22 @@
     android:layout_height="match_parent"
     tools:context="com.epicodus.featherfinder.ui.MainActivity">
 
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:paddingRight="100dp"
+        app:srcCompat="@drawable/background2"
+        android:scaleType="centerCrop"
+        android:id="@+id/imageView" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/imageViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="450dp"
-            android:background="@android:color/white">
-        </android.support.v4.view.ViewPager>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_videocam_black_24dp"
-                android:id="@+id/takeVideoImageView"
-                android:layout_marginLeft="38dp"/>
-
-            <View android:background="@android:color/black"
-                android:layout_width="2dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="38dp"/>
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_photo_camera_black_24dp"
-                android:id="@+id/takePhotoImageView"
-                android:layout_marginLeft="38dp"/>
-
-            <View android:background="@android:color/black"
-                android:layout_width="2dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="38dp"/>
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_music_note_black_24dp"
-                android:id="@+id/takeAudioImageView"
-                android:layout_marginLeft="38dp"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+            app:srcCompat="@drawable/ic_photo_camera_black_24dp"
+            android:id="@+id/takePhotoImageView"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
+
