@@ -30,17 +30,12 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int REQUEST_IMAGE_CAPTURE = 111;
-    private static final int TWO_MINUTES = 1000 * 60 * 2;
 
     @Bind(R.id.takePhotoImageView) ImageView mTakePhotoImageView;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
-    private String mLocationProvider;
-    private LocationManager mLocationManager;
-    private LocationListener mLocationListener;
-    private Location mLastKnownLocation;
-    private Location mLocation;
+
 
 
     @Override
@@ -51,28 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mAuth = FirebaseAuth.getInstance();
         mTakePhotoImageView.setOnClickListener(this);
-
-        mLocationProvider = LocationManager.NETWORK_PROVIDER;
-        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        mLocationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                mLocation = location;
-
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras){}
-
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-        };
-
-        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
-        }
-
-        mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
-
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -149,44 +122,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         finish();
     }
 
-    private boolean isBetterLocation(Location location, Location lastKnownLocation) {
-        if(lastKnownLocation == null) {
-            return true;
-        }
-
-        long timeDiff = location.getTime() - lastKnownLocation.getTime();
-        boolean isSignificantlyNewer = timeDiff < TWO_MINUTES;
-        boolean isSignificantlyOlder = timeDiff > TWO_MINUTES;
-        boolean isNew = timeDiff > 0;
-
-        if(isSignificantlyNewer) {
-            return true;
-        } else if(isSignificantlyOlder){
-            return false;
-        }
-
-        float accuracyDiff = (location.getAccuracy() - lastKnownLocation.getAccuracy());
-        boolean isMoreAccurate = accuracyDiff > 0;
-        boolean isLessAccurate = accuracyDiff < 0;
-        boolean isSignificantlyLessAccurate = accuracyDiff > 200;
-
-        boolean isFromSameProvider = isSameProvider(location.getProvider(), lastKnownLocation.getProvider());
-
-        if(isMoreAccurate) {
-            return true;
-        } else if(isNew && !isLessAccurate) {
-            return true;
-        } else if(isNew && !isSignificantlyLessAccurate) {
-            return true;
-        }
-        return false;
-
-    }
-
-    private boolean isSameProvider(String provider1, String provider2) {
-        if(provider1 == null) {
-            return provider2 == null;
-        }
-        return provider1.equals(provider2);
-    }
 }
