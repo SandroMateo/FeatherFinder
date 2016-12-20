@@ -105,4 +105,30 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/button2" />
 
+    <TextView
+        android:text="Audio"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_music_note_black_24dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="27dp"
+        android:id="@+id/birdCallTextView"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/birdOrderEditText"
+        android:layout_toEndOf="@+id/birdOrderEditText" />
+
+    <TextView
+        android:text="Location"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_place_black_24dp"
+        android:id="@+id/birdLocationTextView"
+        android:layout_above="@+id/textView2"
+        android:layout_alignLeft="@+id/birdCallTextView"
+        android:layout_alignStart="@+id/birdCallTextView"
+        android:layout_marginBottom="33dp" />
+
 </RelativeLayout>
