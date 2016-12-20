@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,8 +22,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.epicodus.featherfinder.R;
+import com.epicodus.featherfinder.models.Sighting;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.ByteArrayOutputStream;
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,6 +42,8 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
     @Bind(R.id.birdFamilyEditText) EditText mBirdFamilyEditText;
     @Bind(R.id.birdGenusEditText) EditText mBirdGenusEditText;
     @Bind(R.id.birdSpeciesEditText) EditText mBirdSpeciesEditText;
+    @Bind(R.id.birdDescriptionEditText) EditText mBirdDescriptionEditText;
+    @Bind(R.id.birdDetailsEditText) EditText mBirdDetailsEditText;
     @Bind(R.id.birdSightImageView) ImageView mBirdSightImageView;
     @Bind(R.id.birdLocationTextView) TextView mBirdLocationTextView;
     @Bind(R.id.birdCallTextView) TextView mBirdCallTextView;
@@ -45,6 +55,7 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
     private LocationListener mLocationListener;
     private Location mLastKnownLocation;
     private Location mLocation;
+    private Location mCurrentLocation;
     private DatabaseReference ref;
 
     @Override
@@ -69,8 +80,10 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
                 Log.v("location", mLocation.toString());
                 if(isBetterLocation(mLocation, mLastKnownLocation)) {
                     mBirdLocationTextView.setText("Lat: " + mLocation.getLatitude() + ", Long: " + mLocation.getLongitude());
+                    mCurrentLocation = mLocation;
                 } else {
                     mBirdLocationTextView.setText("Lat: " + mLastKnownLocation.getLatitude() + ", Long: " + mLastKnownLocation.getLongitude());
+                    mCurrentLocation = mLastKnownLocation;
                 }
             }
 
@@ -112,7 +125,20 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if(v == mBirdLogButton) {
-
+            String order = mBirdOrderEditText.getText().toString();
+            String family = mBirdFamilyEditText.getText().toString();
+            String genus = mBirdGenusEditText.getText().toString();
+            String species = mBirdSpeciesEditText.getText().toString();
+            String latitude = Double.toString(mCurrentLocation.getLatitude());
+            String longitude = Double.toString(mCurrentLocation.getLongitude());
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd H:mm:ss").format(Calendar.getInstance().getTime());
+            String description = mBirdDescriptionEditText.getText().toString();
+            String details = mBirdDetailsEditText.getText().toString();
+            String image = encodeBitmap(mImage);
+            boolean speciesIsValid = isValid(species, mBirdDescriptionEditText);
+            if(speciesIsValid) {
+                Sighting newSighting = new Sighting(species, image, latitude, longitude, timestamp);
+            }
         }
     }
 
@@ -155,5 +181,20 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
             return provider2 == null;
         }
         return provider1.equals(provider2);
+    }
+
+    private boolean isValid(String text, EditText editText) {
+        if(text.equals("")) {
+            editText.setError("Please fill out this field.");
+            return false;
+        }
+        return true;
+    }
+
+    public String encodeBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        return imageEncoded;
     }
 }
