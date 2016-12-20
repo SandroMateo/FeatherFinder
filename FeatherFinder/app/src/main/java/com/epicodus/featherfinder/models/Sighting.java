@@ -12,92 +12,107 @@ public class Sighting {
     String description;
     String details;
     String image;
-    String location;
+    String latitude;
+    String longitude;
+    String timestamp;
     String soundByte;
 
     public Sighting() {}
 
-    public Sighting(String order, String family, String genus, String species, String description, String details, String image, String location, String soundByte) {
-        this.order = order;
-        this.family = family;
-        this.genus = genus;
+
+    public Sighting(String species, String image, String latitude, String longitude, String timestamp) {
         this.species = species;
-        this.description = description;
-        this.details = details;
         this.image = image;
-        this.location = location;
-        this.soundByte = soundByte;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.timestamp = timestamp;
     }
 
     public String getOrder() {
         return order;
     }
 
-    public void setOrder(String order) {
-        this.order = order;
-    }
-
     public String getFamily() {
         return family;
-    }
-
-    public void setFamily(String family) {
-        this.family = family;
     }
 
     public String getGenus() {
         return genus;
     }
 
-    public void setGenus(String genus) {
-        this.genus = genus;
-    }
-
     public String getSpecies() {
         return species;
-    }
-
-    public void setSpecies(String species) {
-        this.species = species;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getDetails() {
         return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
+    public String getLongitude() {
+        return longitude;
     }
 
     public String getSoundByte() {
         return soundByte;
     }
 
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public void setFamily(String family) {
+        this.family = family;
+    }
+
+    public void setGenus(String genus) {
+        this.genus = genus;
+    }
+
+    public void setSpecies(String species) {
+        this.species = species;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
     public void setSoundByte(String soundByte) {
         this.soundByte = soundByte;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }
