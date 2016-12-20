@@ -33,12 +33,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
     @Bind(R.id.takePhotoImageView) ImageView mTakePhotoImageView;
-    LocationManager locationManager;
-    LocationListener locationListener;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
-    private String locationProvider;
+    private String mLocationProvider;
+    private LocationManager mLocationManager;
+    private LocationListener mLocationListener;
+    private Location mLastKnownLocation;
+    private Location mLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +52,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAuth = FirebaseAuth.getInstance();
         mTakePhotoImageView.setOnClickListener(this);
 
-        locationProvider = LocationManager.NETWORK_PROVIDER;
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
+        mLocationProvider = LocationManager.NETWORK_PROVIDER;
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        mLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
+                mLocation = location;
 
             }
 
-            public void onStatusChanged(String provider, int status, Bundle extas){}
+            public void onStatusChanged(String provider, int status, Bundle extras){}
 
             public void onProviderEnabled(String provider) {}
 
@@ -64,8 +68,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         };
 
         if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
         }
+
+        mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
+
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -140,5 +147,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private boolean isBetterLocation(Location location, Location lastKnownLocation) {
+        if(lastKnownLocation == null) {
+            return true;
+        }
+
+        long timeDiff = location.getTime() - lastKnownLocation.getTime();
+        boolean isSignificantlyNewer = timeDiff < TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDiff > TWO_MINUTES;
+        boolean isNew = timeDiff > 0;
+
+        if(isSignificantlyNewer) {
+            return true;
+        } else if(isSignificantlyOlder){
+            return false;
+        }
+
+        float accuracyDiff = (location.getAccuracy() - lastKnownLocation.getAccuracy());
+        boolean isMoreAccurate = accuracyDiff > 0;
+        boolean isLessAccurate = accuracyDiff < 0;
+        boolean isSignificantlyLessAccurate = accuracyDiff > 200;
+
+        boolean isFromSameProvider = isSameProvider(location.getProvider(), lastKnownLocation.getProvider());
+
+        if(isMoreAccurate) {
+            return true;
+        } else if(isNew && !isLessAccurate) {
+            return true;
+        } else if(isNew && !isSignificantlyLessAccurate) {
+            return true;
+        }
+        return false;
+
+    }
+
+    private boolean isSameProvider(String provider1, String provider2) {
+        if(provider1 == null) {
+            return provider2 == null;
+        }
+        return provider1.equals(provider2);
     }
 }
