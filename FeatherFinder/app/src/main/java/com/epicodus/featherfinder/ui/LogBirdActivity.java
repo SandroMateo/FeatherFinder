@@ -21,8 +21,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.epicodus.featherfinder.Constants;
 import com.epicodus.featherfinder.R;
 import com.epicodus.featherfinder.models.Sighting;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -131,13 +134,17 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
             String species = mBirdSpeciesEditText.getText().toString();
             String latitude = Double.toString(mCurrentLocation.getLatitude());
             String longitude = Double.toString(mCurrentLocation.getLongitude());
-            String timestamp = new SimpleDateFormat("yyyy-MM-dd H:mm:ss").format(Calendar.getInstance().getTime());
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
             String description = mBirdDescriptionEditText.getText().toString();
             String details = mBirdDetailsEditText.getText().toString();
             String image = encodeBitmap(mImage);
             boolean speciesIsValid = isValid(species, mBirdDescriptionEditText);
             if(speciesIsValid) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String uId = user.getUid();
                 Sighting newSighting = new Sighting(species, image, latitude, longitude, timestamp);
+                saveSightingToDatabase(newSighting);
+                saveSightingToUser(uId, newSighting);
             }
         }
     }
@@ -191,10 +198,25 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
         return true;
     }
 
-    public String encodeBitmap(Bitmap bitmap) {
+    private String encodeBitmap(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
         return imageEncoded;
+    }
+
+    private void saveSightingToUser(String userId, Sighting sighting) {
+        DatabaseReference userRef = FirebaseDatabase
+                .getInstance()
+                .getReference(Constants.FIREBASE_CHILD_USERS)
+                .child(userId);
+        DatabaseReference pushRef = userRef.push();
+        String pushId = pushRef.getKey();
+        sighting.setPushId(pushId);
+        pushRef.setValue(sighting);
+    }
+
+    private void saveSightingToDatabase(Sighting sighting) {
+        ref.child(Constants.FIREBASE_CHILD_ALL).push().setValue(sighting);
     }
 }

@@ -16,6 +16,7 @@ public class Sighting {
     String longitude;
     String timestamp;
     String soundByte;
+    String pushId;
 
     public Sighting() {}
 
@@ -114,5 +115,13 @@ public class Sighting {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getPushId() {
+        return pushId;
+    }
+
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 }
