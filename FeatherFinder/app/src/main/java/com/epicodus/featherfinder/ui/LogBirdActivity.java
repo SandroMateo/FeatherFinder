@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.epicodus.featherfinder.Constants;
 import com.epicodus.featherfinder.R;
@@ -145,6 +146,9 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
                 Sighting newSighting = new Sighting(species, image, latitude, longitude, timestamp);
                 saveSightingToDatabase(newSighting);
                 saveSightingToUser(uId, newSighting);
+                Intent intent = new Intent(LogBirdActivity.this, MainActivity.class);
+                Toast.makeText(LogBirdActivity.this, "Sighting saved!", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
             }
         }
     }

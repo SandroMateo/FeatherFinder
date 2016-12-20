@@ -16,13 +16,22 @@
         android:id="@+id/imageView" />
 
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@drawable/ic_photo_camera_black_24dp"
-            android:id="@+id/takePhotoImageView"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/ic_photo_camera_black_24dp"
+        android:id="@+id/takePhotoImageView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Find Birds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/takePhotoImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="191dp"
+        android:id="@+id/findBirdsButton" />
 
 </RelativeLayout>
 

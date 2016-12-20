@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQUEST_IMAGE_CAPTURE = 111;
 
     @Bind(R.id.takePhotoImageView) ImageView mTakePhotoImageView;
+    @Bind(R.id.findBirdsButton) Button mFindBirdsButton;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mAuth = FirebaseAuth.getInstance();
         mTakePhotoImageView.setOnClickListener(this);
+        mFindBirdsButton.setOnClickListener(this);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -93,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if(v == mTakePhotoImageView) {
             onLaunchCamera();
+        } else if(v == mFindBirdsButton) {
+            Intent intent = new Intent(MainActivity.this, FeatherMapActivity.class);
+            startActivity(intent);
         }
     }
 
