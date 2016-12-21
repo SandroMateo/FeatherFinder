@@ -47,8 +47,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.LogBirdActivity" />
-
+        <activity android:name=".ui.NewSightingActivity" />
+        <activity android:name=".ui.SightingDetailActivity"></activity>
     </application>
 
 </manifest>

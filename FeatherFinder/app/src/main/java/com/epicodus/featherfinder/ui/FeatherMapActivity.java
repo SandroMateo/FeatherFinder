@@ -13,10 +13,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.epicodus.featherfinder.Constants;
-import com.epicodus.featherfinder.Manifest;
 import com.epicodus.featherfinder.R;
 import com.epicodus.featherfinder.models.Sighting;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -128,13 +126,15 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
+        mMap.setOnMarkerClickListener(this);
     }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
         Sighting sighting = (Sighting) marker.getTag();
+        Log.v("sighting", sighting.getSpecies());
         if(sighting != null) {
-            Intent intent = new Intent(FeatherMapActivity.this, BirdDetailActivity.class);
+            Intent intent = new Intent(FeatherMapActivity.this, SightingDetailActivity.class);
             intent.putExtra("sighting", Parcels.wrap(sighting));
             startActivity(intent);
         }
@@ -151,8 +151,6 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
                         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
                         mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
                     }
-                } else {
-
                 }
                 break;
             }

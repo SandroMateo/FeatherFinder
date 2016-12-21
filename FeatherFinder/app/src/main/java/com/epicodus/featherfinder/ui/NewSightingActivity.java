@@ -3,7 +3,6 @@ package com.epicodus.featherfinder.ui;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -31,15 +30,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
-import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class LogBirdActivity extends AppCompatActivity implements View.OnClickListener {
+public class NewSightingActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
     @Bind(R.id.birdOrderEditText) EditText mBirdOrderEditText;
@@ -98,13 +95,13 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
             public void onProviderDisabled(String provider) {}
         };
 
-        if(ContextCompat.checkSelfPermission(LogBirdActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
             mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
 
         } else {
-            ActivityCompat.requestPermissions(LogBirdActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 0 );
+            ActivityCompat.requestPermissions(NewSightingActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 0 );
         }
     }
 
@@ -113,7 +110,7 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
         switch(requestCode) {
             case 0: {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)  {
-                    if(ContextCompat.checkSelfPermission(LogBirdActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
                         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
                         mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
@@ -146,11 +143,11 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
                 Sighting newSighting = new Sighting(species, image, latitude, longitude, timestamp);
                 saveSightingToDatabase(newSighting);
                 saveSightingToUser(uId, newSighting);
-                Intent intent = new Intent(LogBirdActivity.this, MainActivity.class);
-                if(ContextCompat.checkSelfPermission(LogBirdActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(NewSightingActivity.this, MainActivity.class);
+                if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     mLocationManager.removeUpdates(mLocationListener);
                 }
-                Toast.makeText(LogBirdActivity.this, "Sighting saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewSightingActivity.this, "Sighting saved!", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
         }

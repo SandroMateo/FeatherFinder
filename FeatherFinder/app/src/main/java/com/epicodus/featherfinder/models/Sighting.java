@@ -21,10 +21,9 @@ public class Sighting {
     String soundByte;
     String pushId;
 
-    public Sighting() {}
+    public Sighting() {};
 
-
-    public Sighting(String species, String image, String latitude, String longitude, String timestamp) {
+    public Sighting (String species, String image, String latitude, String longitude, String timestamp) {
         this.species = species;
         this.image = image;
         this.latitude = latitude;
