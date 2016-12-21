@@ -86,17 +86,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:layout_below="@+id/birdDescriptionEditText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="11dp"
-        android:id="@+id/birdDetailsEditText"
-        android:hint="More Details" />
-
     <Button
         android:text="Record Sighting"
         android:layout_width="match_parent"
@@ -105,30 +94,74 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/birdLogButton" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/birdDetailsEditText"
+        android:hint="More Details"
+        android:layout_below="@+id/birdDescriptionEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <TextView
-        android:text="Audio"
-        android:textSize="24sp"
+        android:text="or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_music_note_black_24dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="27dp"
-        android:id="@+id/birdCallTextView"
+        android:layout_alignBottom="@+id/takePhotoButton"
+        android:layout_toRightOf="@+id/takePhotoButton"
+        android:layout_toEndOf="@+id/takePhotoButton"
+        android:layout_marginBottom="12dp"
+        android:id="@+id/textView" />
+
+    <Button
+        android:text="Upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/takePhotoButton"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView"
+        android:id="@+id/uploadImageButton" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_photo_camera_black_24dp"
+        android:layout_marginTop="44dp"
+        android:id="@+id/takePhotoButton"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/birdOrderEditText"
         android:layout_toEndOf="@+id/birdOrderEditText" />
 
-    <TextView
-        android:text="Location"
-        android:textSize="24sp"
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_place_black_24dp"
-        android:id="@+id/birdLocationTextView"
+        app:srcCompat="@drawable/ic_place_black_24dp"
         android:layout_above="@+id/textView2"
-        android:layout_alignLeft="@+id/birdCallTextView"
-        android:layout_alignStart="@+id/birdCallTextView"
-        android:layout_marginBottom="33dp" />
+        android:layout_alignLeft="@+id/takePhotoButton"
+        android:layout_alignStart="@+id/takePhotoButton"
+        android:layout_marginBottom="29dp"
+        android:id="@+id/getLocationButton" />
+
+    <TextView
+        android:text="or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/getLocationButton"
+        android:layout_toRightOf="@+id/getLocationButton"
+        android:layout_toEndOf="@+id/getLocationButton"
+        android:layout_marginBottom="11dp"
+        android:id="@+id/textView4" />
+
+    <Button
+        android:text="Drop Pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dropPinButton"
+        android:layout_alignBaseline="@+id/textView4"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4" />
 
 </RelativeLayout>

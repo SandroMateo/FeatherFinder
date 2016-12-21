@@ -21,8 +21,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private static final int REQUEST_IMAGE_CAPTURE = 111;
-
     @Bind(R.id.takePhotoImageView) ImageView mTakePhotoImageView;
     @Bind(R.id.findBirdsButton) Button mFindBirdsButton;
 
@@ -86,27 +84,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v == mTakePhotoImageView) {
-            onLaunchCamera();
+
         } else if(v == mFindBirdsButton) {
             Intent intent = new Intent(MainActivity.this, FeatherMapActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    public void onLaunchCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            Intent intent = new Intent(MainActivity.this, NewSightingActivity.class);
-            intent.putExtra("image", imageBitmap);
             startActivity(intent);
         }
     }

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import com.epicodus.featherfinder.Constants;
 import com.epicodus.featherfinder.R;
 import com.epicodus.featherfinder.models.Sighting;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +41,7 @@ import butterknife.ButterKnife;
 
 public class NewSightingActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int TWO_MINUTES = 1000 * 60 * 2;
+    private static final int REQUEST_IMAGE_CAPTURE = 111;
 
     @Bind(R.id.birdOrderEditText) EditText mBirdOrderEditText;
     @Bind(R.id.birdFamilyEditText) EditText mBirdFamilyEditText;
@@ -46,8 +50,10 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
     @Bind(R.id.birdDescriptionEditText) EditText mBirdDescriptionEditText;
     @Bind(R.id.birdDetailsEditText) EditText mBirdDetailsEditText;
     @Bind(R.id.birdSightImageView) ImageView mBirdSightImageView;
-    @Bind(R.id.birdLocationTextView) TextView mBirdLocationTextView;
-    @Bind(R.id.birdCallTextView) TextView mBirdCallTextView;
+    @Bind(R.id.dropPinButton) Button mDropPinButton;
+    @Bind(R.id.uploadImageButton) Button mUploadImageButton;
+    @Bind(R.id.takePhotoButton) ImageButton mTakePhotoButton;
+    @Bind(R.id.getLocationButton) ImageButton mGetLocationButton;
     @Bind(R.id.birdLogButton) Button mBirdLogButton;
 
     private Bitmap mImage;
@@ -65,9 +71,10 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_new_sighting);
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        mImage = intent.getParcelableExtra("image");
-        mBirdSightImageView.setImageBitmap(mImage);
+        mDropPinButton.setOnClickListener(this);
+        mUploadImageButton.setOnClickListener(this);
+        mTakePhotoButton.setOnClickListener(this);
+        mGetLocationButton.setOnClickListener(this);
         mBirdLogButton.setOnClickListener(this);
 
         ref = FirebaseDatabase.getInstance().getReference();
@@ -142,7 +149,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             if(speciesIsValid && descriptionIsValid && detailsIsValid) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uId = user.getUid();
-                Sighting newSighting = new Sighting(species, description, details, longitude, timestamp);
+                Sighting newSighting = new Sighting(species, description, details, image, latitude, longitude, timestamp);
                 saveSightingToDatabase(newSighting);
                 saveSightingToUser(uId, newSighting);
                 Intent intent = new Intent(NewSightingActivity.this, MainActivity.class);
@@ -152,6 +159,8 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
                 Toast.makeText(NewSightingActivity.this, "Sighting saved!", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
+        } else if(v == mTakePhotoButton) {
+            onLaunchCamera();
         }
     }
 
@@ -223,5 +232,21 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
 
     private void saveSightingToDatabase(Sighting sighting) {
         ref.child(Constants.FIREBASE_CHILD_ALL).push().setValue(sighting);
+    }
+
+    public void onLaunchCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            mBirdSightImageView.setImageBitmap(imageBitmap);
+        }
     }
 }
