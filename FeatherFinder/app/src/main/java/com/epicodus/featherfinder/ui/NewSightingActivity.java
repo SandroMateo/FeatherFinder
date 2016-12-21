@@ -64,6 +64,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
     private Location mLocation;
     private Location mCurrentLocation;
     private DatabaseReference ref;
+    private int mCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_new_sighting);
         ButterKnife.bind(this);
 
+        mCounter = 0;
         mDropPinButton.setOnClickListener(this);
         mUploadImageButton.setOnClickListener(this);
         mTakePhotoButton.setOnClickListener(this);
@@ -82,52 +84,6 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
         mLocationProvider = LocationManager.NETWORK_PROVIDER;
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        mLocationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                mLocation = location;
-                Log.v("location", mLocation.toString());
-                if(isBetterLocation(mLocation, mLastKnownLocation)) {
-                    mBirdLocationTextView.setText("Lat: " + mLocation.getLatitude() + ", Long: " + mLocation.getLongitude());
-                    mCurrentLocation = mLocation;
-                } else {
-                    mBirdLocationTextView.setText("Lat: " + mLastKnownLocation.getLatitude() + ", Long: " + mLastKnownLocation.getLongitude());
-                    mCurrentLocation = mLastKnownLocation;
-                }
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras){}
-
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-        };
-
-        if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
-            mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
-
-        } else {
-            ActivityCompat.requestPermissions(NewSightingActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 0 );
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch(requestCode) {
-            case 0: {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)  {
-                    if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-                        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
-                        mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
-                    }
-                } else {
-
-                }
-                break;
-            }
-        }
     }
 
     @Override
@@ -156,11 +112,61 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
                 if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     mLocationManager.removeUpdates(mLocationListener);
                 }
-                Toast.makeText(NewSightingActivity.this, "Sighting saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewSightingActivity.this, "Sighting saved!", Toast.LENGTH_LONG).show();
                 startActivity(intent);
             }
         } else if(v == mTakePhotoButton) {
             onLaunchCamera();
+        } else if(v == mGetLocationButton) {
+            mLocationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    mCounter++;
+                    mLocation = location;
+                    Log.v("location", mLocation.toString());
+                    if(isBetterLocation(mLocation, mLastKnownLocation)) {
+                        mCurrentLocation = mLocation;
+                    } else {
+                        mCurrentLocation = mLastKnownLocation;
+                    }
+
+                    if(mCounter == 1) {
+                        Toast.makeText(NewSightingActivity.this, "Location Recorded!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                public void onStatusChanged(String provider, int status, Bundle extras){}
+
+                public void onProviderEnabled(String provider) {}
+
+                public void onProviderDisabled(String provider) {}
+            };
+
+            if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
+                mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
+
+            } else {
+                ActivityCompat.requestPermissions(NewSightingActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 0 );
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch(requestCode) {
+            case 0: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)  {
+                    if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+                        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
+                        mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
+                    }
+                } else {
+
+                }
+                break;
+            }
         }
     }
 
