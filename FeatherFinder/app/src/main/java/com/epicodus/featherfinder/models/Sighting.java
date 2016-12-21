@@ -1,9 +1,12 @@
 package com.epicodus.featherfinder.models;
 
+import org.parceler.Parcel;
+
 /**
  * Created by DroAlvarez on 12/19/16.
  */
 
+@Parcel
 public class Sighting {
     String order;
     String family;

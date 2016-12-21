@@ -147,6 +147,9 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
                 saveSightingToDatabase(newSighting);
                 saveSightingToUser(uId, newSighting);
                 Intent intent = new Intent(LogBirdActivity.this, MainActivity.class);
+                if(ContextCompat.checkSelfPermission(LogBirdActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    mLocationManager.removeUpdates(mLocationListener);
+                }
                 Toast.makeText(LogBirdActivity.this, "Sighting saved!", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
@@ -205,8 +208,7 @@ public class LogBirdActivity extends AppCompatActivity implements View.OnClickLi
     private String encodeBitmap(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-        return imageEncoded;
+        return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
     }
 
     private void saveSightingToUser(String userId, Sighting sighting) {

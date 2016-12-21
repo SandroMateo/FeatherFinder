@@ -1,6 +1,7 @@
 package com.epicodus.featherfinder.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,7 +21,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,18 +31,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCallback {
+import org.parceler.Parcel;
+import org.parceler.Parcels;
+
+public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
     private GoogleMap mMap;
     private DatabaseReference mSightingReference;
-    private FirebaseRecyclerAdapter mFirebaseAdapter;
     private String mLocationProvider;
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
     private Location mLastKnownLocation;
     private Location mLocation;
     private LatLng mCurrentLocation;
+    private boolean mSetToCurrentLocation = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +70,10 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
                     mCurrentLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
                 }
 
-                if(mMap != null) {
+                if(mMap != null && mSetToCurrentLocation) {
+                    mMap.addMarker(new MarkerOptions().position(mCurrentLocation).title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).flat(true));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(mCurrentLocation));
+                    mSetToCurrentLocation = false;
                 }
             }
 
@@ -109,7 +117,8 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
                     Double longitude = Double.parseDouble(sighting.getLongitude());
                     String species = sighting.getSpecies();
                     LatLng location = new LatLng(latitude, longitude);
-                    mMap.addMarker(new MarkerOptions().position(location).title(species));
+                    Marker birdMarker = mMap.addMarker(new MarkerOptions().position(location).title(species));
+                    birdMarker.setTag(sighting);
                 }
             }
 
@@ -119,6 +128,17 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        Sighting sighting = (Sighting) marker.getTag();
+        if(sighting != null) {
+            Intent intent = new Intent(FeatherMapActivity.this, BirdDetailActivity.class);
+            intent.putExtra("sighting", Parcels.wrap(sighting));
+            startActivity(intent);
+        }
+        return false;
     }
 
     @Override
@@ -178,5 +198,13 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
             return provider2 == null;
         }
         return provider1.equals(provider2);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mLocationListener != null && ContextCompat.checkSelfPermission(FeatherMapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationManager.removeUpdates(mLocationListener);
+        }
     }
 }
