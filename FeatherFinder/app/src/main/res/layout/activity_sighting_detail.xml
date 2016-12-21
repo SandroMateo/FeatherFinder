@@ -26,7 +26,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginStart="25dp"
         android:layout_marginTop="27dp"
-        android:id="@+id/birdCallTextView"
+        android:id="@+id/sightingCallTextView"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/sightingImageView"
         android:layout_toEndOf="@+id/sightingImageView" />
@@ -37,11 +37,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_place_black_24dp"
-        android:id="@+id/birdLocationTextView"
+        android:id="@+id/sightingLocationTextView"
         android:layout_marginTop="30dp"
-        android:layout_below="@+id/birdCallTextView"
-        android:layout_alignLeft="@+id/birdCallTextView"
-        android:layout_alignStart="@+id/birdCallTextView" />
+        android:layout_below="@+id/sightingCallTextView"
+        android:layout_alignLeft="@+id/sightingCallTextView"
+        android:layout_alignStart="@+id/sightingCallTextView" />
 
     <TextView
         android:text="TextView"
@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:id="@+id/textView3"
+        android:id="@+id/sightingDescriptionTextView"
         android:layout_below="@+id/sightingSpeciesTextView"
         android:layout_centerHorizontal="true" />
 
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="95dp"
         android:id="@+id/sightingDetailsTextView"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/sightingDescriptionTextView"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -78,4 +78,14 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/messageSpotterButton" />
+
+    <TextView
+        android:text="TextView"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sightingDescriptionTextView"
+        android:layout_alignRight="@+id/sightingLocationTextView"
+        android:layout_alignEnd="@+id/sightingLocationTextView"
+        android:id="@+id/sightingTimestampTextView" />
 </RelativeLayout>

@@ -62,7 +62,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_bird);
+        setContentView(R.layout.activity_new_sighting);
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
@@ -132,7 +132,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             String species = mBirdSpeciesEditText.getText().toString();
             String latitude = Double.toString(mCurrentLocation.getLatitude());
             String longitude = Double.toString(mCurrentLocation.getLongitude());
-            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+            String timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm").format(Calendar.getInstance().getTime());
             String description = mBirdDescriptionEditText.getText().toString();
             String details = mBirdDetailsEditText.getText().toString();
             String image = encodeBitmap(mImage);
