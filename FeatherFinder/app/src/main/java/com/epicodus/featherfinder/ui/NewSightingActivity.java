@@ -137,10 +137,12 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             String details = mBirdDetailsEditText.getText().toString();
             String image = encodeBitmap(mImage);
             boolean speciesIsValid = isValid(species, mBirdDescriptionEditText);
-            if(speciesIsValid) {
+            boolean descriptionIsValid = isValid(description, mBirdDescriptionEditText);
+            boolean detailsIsValid = isValid(details, mBirdDetailsEditText);
+            if(speciesIsValid && descriptionIsValid && detailsIsValid) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uId = user.getUid();
-                Sighting newSighting = new Sighting(species, image, latitude, longitude, timestamp);
+                Sighting newSighting = new Sighting(species, description, details, longitude, timestamp);
                 saveSightingToDatabase(newSighting);
                 saveSightingToUser(uId, newSighting);
                 Intent intent = new Intent(NewSightingActivity.this, MainActivity.class);

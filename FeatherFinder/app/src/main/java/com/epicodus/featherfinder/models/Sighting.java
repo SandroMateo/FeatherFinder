@@ -23,8 +23,10 @@ public class Sighting {
 
     public Sighting() {};
 
-    public Sighting (String species, String image, String latitude, String longitude, String timestamp) {
+    public Sighting (String species, String description, String details, String image, String latitude, String longitude, String timestamp) {
         this.species = species;
+        this.description = description;
+        this.details = details;
         this.image = image;
         this.latitude = latitude;
         this.longitude = longitude;
