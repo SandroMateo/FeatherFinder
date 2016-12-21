@@ -21,7 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    @Bind(R.id.takePhotoImageView) ImageView mTakePhotoImageView;
+    @Bind(R.id.recordSightingButton) Button mRecordSightingButton;
     @Bind(R.id.findBirdsButton) Button mFindBirdsButton;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ButterKnife.bind(this);
 
         mAuth = FirebaseAuth.getInstance();
-        mTakePhotoImageView.setOnClickListener(this);
+        mRecordSightingButton.setOnClickListener(this);
         mFindBirdsButton.setOnClickListener(this);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -83,8 +83,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if(v == mTakePhotoImageView) {
-
+        if(v == mRecordSightingButton) {
+            Intent intent = new Intent(MainActivity.this, NewSightingActivity.class);
+            startActivity(intent);
         } else if(v == mFindBirdsButton) {
             Intent intent = new Intent(MainActivity.this, FeatherMapActivity.class);
             startActivity(intent);

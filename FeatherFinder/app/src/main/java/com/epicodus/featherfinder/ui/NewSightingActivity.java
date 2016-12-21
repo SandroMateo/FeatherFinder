@@ -253,6 +253,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mBirdSightImageView.setImageBitmap(imageBitmap);
+            mImage = imageBitmap;
         }
     }
 }
