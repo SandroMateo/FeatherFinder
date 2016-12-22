@@ -9,8 +9,8 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_profile"
-        android:title="Profile"
+        android:id="@+id/action_sighting"
+        android:title="New Sighting"
         android:visible="true"
         app:showAsAction="never" />
 

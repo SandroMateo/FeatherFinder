@@ -6,11 +6,15 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.epicodus.featherfinder.R;
 import com.epicodus.featherfinder.models.Sighting;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
@@ -51,6 +55,37 @@ public class SightingDetailActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_logout) {
+            logout();
+            return true;
+        } else if(id == R.id.action_find) {
+            Intent intent = new Intent(SightingDetailActivity.this, FeatherMapActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.action_sighting) {
+            Intent intent = new Intent(SightingDetailActivity.this, NewSightingActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(SightingDetailActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private Bitmap decodeFromBase64(String image) throws IOException {

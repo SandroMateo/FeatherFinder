@@ -51,6 +51,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void onClick(View v) {
+        if(v == mRecordSightingButton) {
+            Intent intent = new Intent(MainActivity.this, NewSightingActivity.class);
+            startActivity(intent);
+        } else if(v == mFindBirdsButton) {
+            Intent intent = new Intent(MainActivity.this, FeatherMapActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
@@ -77,19 +88,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(id == R.id.action_logout) {
             logout();
             return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(v == mRecordSightingButton) {
-            Intent intent = new Intent(MainActivity.this, NewSightingActivity.class);
-            startActivity(intent);
-        } else if(v == mFindBirdsButton) {
+        } else if(id == R.id.action_find) {
             Intent intent = new Intent(MainActivity.this, FeatherMapActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_sighting) {
+            Intent intent = new Intent(MainActivity.this, NewSightingActivity.class);
+            startActivity(intent);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void logout() {
