@@ -4,10 +4,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -36,6 +40,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -43,9 +48,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class NewSightingActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final int TWO_MINUTES = 1000 * 60 * 2;
-    private static final int REQUEST_IMAGE_CAPTURE = 111;
-
     @Bind(R.id.birdOrderEditText) EditText mBirdOrderEditText;
     @Bind(R.id.birdFamilyEditText) EditText mBirdFamilyEditText;
     @Bind(R.id.birdGenusEditText) EditText mBirdGenusEditText;
@@ -104,11 +106,10 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             String image = encodeBitmap(mImage);
             boolean speciesIsValid = isValid(species, mBirdDescriptionEditText);
             boolean descriptionIsValid = isValid(description, mBirdDescriptionEditText);
-            boolean detailsIsValid = isValid(details, mBirdDetailsEditText);
-            if(speciesIsValid && descriptionIsValid && detailsIsValid) {
+            if(speciesIsValid && descriptionIsValid) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uId = user.getUid();
-                Sighting newSighting = new Sighting(species, description, details, image, latitude, longitude, timestamp);
+                Sighting newSighting = new Sighting(species, description, image, latitude, longitude, timestamp);
                 saveSightingToDatabase(newSighting);
                 saveSightingToUser(uId, newSighting);
                 Intent intent = new Intent(NewSightingActivity.this, MainActivity.class);
@@ -152,7 +153,15 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             } else {
                 ActivityCompat.requestPermissions(NewSightingActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 0 );
             }
+        } else if(v == mUploadImageButton) {
+            if (Environment.getExternalStorageState().equals("mounted")) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, "Select Image: "), Constants.PICK_IMAGE_FROM_LIBRARY);
+
+            }
         }
+
     }
 
     @Override
@@ -179,8 +188,8 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
         }
 
         long timeDiff = location.getTime() - lastKnownLocation.getTime();
-        boolean isSignificantlyNewer = timeDiff < TWO_MINUTES;
-        boolean isSignificantlyOlder = timeDiff > TWO_MINUTES;
+        boolean isSignificantlyNewer = timeDiff < Constants.TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDiff > Constants.TWO_MINUTES;
         boolean isNew = timeDiff > 0;
 
         if(isSignificantlyNewer) {
@@ -246,17 +255,28 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
     public void onLaunchCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if(requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mBirdSightImageView.setImageBitmap(imageBitmap);
             mImage = imageBitmap;
+        } else if(requestCode == Constants.PICK_IMAGE_FROM_LIBRARY && resultCode == RESULT_OK) {
+            Uri pickedImage = data.getData();
+
+            try {
+                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), pickedImage);
+                mBirdSightImageView.setImageBitmap(imageBitmap);
+                mImage = imageBitmap;
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

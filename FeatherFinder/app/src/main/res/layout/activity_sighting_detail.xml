@@ -18,32 +18,6 @@
         android:id="@+id/sightingImageView"/>
 
     <TextView
-        android:text="Audio"
-        android:textSize="24sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_music_note_black_24dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="27dp"
-        android:id="@+id/sightingCallTextView"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/sightingImageView"
-        android:layout_toEndOf="@+id/sightingImageView" />
-
-    <TextView
-        android:text="Location"
-        android:textSize="24sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_place_black_24dp"
-        android:id="@+id/sightingLocationTextView"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/sightingCallTextView"
-        android:layout_alignLeft="@+id/sightingCallTextView"
-        android:layout_alignStart="@+id/sightingCallTextView" />
-
-    <TextView
         android:text="TextView"
         android:textSize="30sp"
         android:layout_width="wrap_content"
@@ -58,12 +32,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
+        android:layout_margin="20dp"
+        android:textSize="20sp"
         android:id="@+id/sightingDescriptionTextView"
         android:layout_below="@+id/sightingSpeciesTextView"
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="Details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="95dp"
@@ -80,12 +55,31 @@
         android:id="@+id/messageSpotterButton" />
 
     <TextView
+        android:text="Location"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_place_black_24dp"
+        android:id="@+id/sightingLocationTextView"
+        android:layout_marginTop="49dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/sightingImageView"
+        android:layout_toEndOf="@+id/sightingImageView"
+        android:layout_marginRight="32dp"
+        android:layout_marginEnd="32dp" />
+
+    <TextView
         android:text="TextView"
         android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/sightingDescriptionTextView"
-        android:layout_alignRight="@+id/sightingLocationTextView"
-        android:layout_alignEnd="@+id/sightingLocationTextView"
-        android:id="@+id/sightingTimestampTextView" />
+        android:id="@+id/sightingTimestampTextView"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/sightingSpeciesTextView"
+        android:layout_toEndOf="@+id/sightingSpeciesTextView"
+        android:layout_marginLeft="17dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="17dp" />
 </RelativeLayout>

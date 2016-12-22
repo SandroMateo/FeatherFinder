@@ -12,4 +12,7 @@ public class Constants {
     public static final String FIREBASE_CHILD_ALL = "all";
     public static final String FIREBASE_CHILD_USERS = "users";
     public static final float MAPS_ZOOM_LEVEL = 12;
+    public static final int REQUEST_IMAGE_CAPTURE = 111;
+    public static final int PICK_IMAGE_FROM_LIBRARY = 112;
+    public static final int TWO_MINUTES = 1000 * 60 * 2;
 }

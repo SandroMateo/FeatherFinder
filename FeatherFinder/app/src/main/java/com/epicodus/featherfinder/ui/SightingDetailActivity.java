@@ -26,7 +26,6 @@ import butterknife.ButterKnife;
 
 public class SightingDetailActivity extends AppCompatActivity {
     @Bind(R.id.sightingImageView) ImageView mSightingImageView;
-    @Bind(R.id.sightingCallTextView) TextView mSightingCallTextView;
     @Bind(R.id.sightingLocationTextView) TextView mSightingLocationTextView;
     @Bind(R.id.sightingSpeciesTextView) TextView mSightingSpeciesTextView;
     @Bind(R.id.sightingTimestampTextView) TextView mSightingTimestampTextView;
