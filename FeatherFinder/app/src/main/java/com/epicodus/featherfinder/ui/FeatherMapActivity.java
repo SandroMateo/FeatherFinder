@@ -11,9 +11,6 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.epicodus.featherfinder.Constants;
@@ -27,7 +24,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,8 +34,6 @@ import org.parceler.Parcel;
 import org.parceler.Parcels;
 
 public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
-    private static final int TWO_MINUTES = 1000 * 60 * 2;
-
     private GoogleMap mMap;
     private DatabaseReference mSightingReference;
     private String mLocationProvider;
@@ -49,7 +43,6 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
     private Location mLocation;
     private LatLng mCurrentLocation;
     private boolean mSetToCurrentLocation = true;
-    private Marker userMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +67,11 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
                 }
 
                 if(mMap != null && mSetToCurrentLocation) {
-                    userMarker = mMap.addMarker(new MarkerOptions().position(mCurrentLocation).title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).flat(true));
+                    mMap.addMarker(new MarkerOptions().position(mCurrentLocation).title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).flat(true));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, Constants.MAPS_ZOOM_LEVEL));
-                    mSetToCurrentLocation = false;
+                    if(ContextCompat.checkSelfPermission(FeatherMapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mLocationManager.removeUpdates(mLocationListener);
+                    }
                 }
             }
 
@@ -134,8 +129,8 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
             Intent intent = new Intent(FeatherMapActivity.this, SightingDetailActivity.class);
             intent.putExtra("sighting", Parcels.wrap(sighting));
             startActivity(intent);
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -144,7 +139,6 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
             case 0: {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)  {
                     if(ContextCompat.checkSelfPermission(FeatherMapActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
                         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
                         mLastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProvider);
                     }
@@ -160,8 +154,8 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
         }
 
         long timeDiff = location.getTime() - lastKnownLocation.getTime();
-        boolean isSignificantlyNewer = timeDiff < TWO_MINUTES;
-        boolean isSignificantlyOlder = timeDiff > TWO_MINUTES;
+        boolean isSignificantlyNewer = timeDiff < Constants.TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDiff > Constants.TWO_MINUTES;
         boolean isNew = timeDiff > 0;
 
         if(isSignificantlyNewer) {

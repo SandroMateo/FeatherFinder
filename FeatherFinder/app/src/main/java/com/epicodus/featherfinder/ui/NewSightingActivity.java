@@ -51,6 +51,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class NewSightingActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final int IMAGE_HEIGHT = 600;
+    public static final int IMAGE_WIDTH = 350;
+
     @Bind(R.id.birdOrderEditText) EditText mBirdOrderEditText;
     @Bind(R.id.birdFamilyEditText) EditText mBirdFamilyEditText;
     @Bind(R.id.birdGenusEditText) EditText mBirdGenusEditText;
@@ -95,8 +98,8 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
 
         if(getIntent().hasExtra("latitude")) {
             Intent intent = getIntent();
-            String sightingLatitude = intent.getStringExtra("latitude");
-            String sightingLongitude = intent.getStringExtra("longitude");
+            mLatitude = intent.getStringExtra("latitude");
+            mLongitude = intent.getStringExtra("longitude");
         }
 
         if(mSharedPreferences.contains(Constants.PREFERENCES_DESCRIPTION_KEY)) {
@@ -132,9 +135,6 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
                 saveSightingToDatabase(newSighting);
                 saveSightingToUser(uId, newSighting);
                 Intent intent = new Intent(NewSightingActivity.this, MainActivity.class);
-                if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    mLocationManager.removeUpdates(mLocationListener);
-                }
                 Toast.makeText(NewSightingActivity.this, "Sighting saved!", Toast.LENGTH_LONG).show();
                 startActivity(intent);
             }
@@ -157,6 +157,9 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
 
                     if(mCounter == 1) {
                         Toast.makeText(NewSightingActivity.this, "Location Recorded!", Toast.LENGTH_SHORT).show();
+                        if(ContextCompat.checkSelfPermission(NewSightingActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            mLocationManager.removeUpdates(mLocationListener);
+                        }
                     }
                 }
 
@@ -315,8 +318,9 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
 
             try {
                 Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), pickedImage);
-                mBirdSightImageView.setImageBitmap(imageBitmap);
-                mImage = imageBitmap;
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, IMAGE_WIDTH, IMAGE_HEIGHT, true);
+                mBirdSightImageView.setImageBitmap(scaledBitmap);
+                mImage = scaledBitmap;
             } catch(IOException e) {
                 e.printStackTrace();
             }
@@ -385,6 +389,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             String image = mSharedPreferences.getString(Constants.PREFERENCES_IMAGE_KEY, null);
             try {
                 Bitmap imageBitmap = decodeFromBase64(image);
+                mImage = imageBitmap;
                 mBirdSightImageView.setImageBitmap(imageBitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -394,7 +399,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             mLatitude = mSharedPreferences.getString(Constants.PREFERENCES_LATITUDE_KEY, null);
             mLongitude = mSharedPreferences.getString(Constants.PREFERENCES_LONGITUDE_KEY, null);
         }
-
+        mSharedPreferences.edit().clear().apply();
     }
 
     private Bitmap decodeFromBase64(String image) throws IOException {
@@ -409,4 +414,5 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
         startActivity(intent);
         finish();
     }
+
 }
