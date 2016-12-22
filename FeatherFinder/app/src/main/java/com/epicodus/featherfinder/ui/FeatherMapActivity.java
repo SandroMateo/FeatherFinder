@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -127,10 +128,12 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
         } else {
             Sighting sighting = (Sighting) marker.getTag();
             Intent intent = new Intent(FeatherMapActivity.this, SightingDetailActivity.class);
-            intent.putExtra("sighting", Parcels.wrap(sighting));
+            Parcelable parcel = Parcels.wrap(sighting);
+            Log.v("sighting", "sighting: " + parcel);
+            intent.putExtra("sighting", parcel);
             startActivity(intent);
-            return false;
         }
+        return false;
     }
 
     @Override

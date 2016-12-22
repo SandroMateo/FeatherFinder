@@ -51,8 +51,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class NewSightingActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final int IMAGE_HEIGHT = 600;
-    public static final int IMAGE_WIDTH = 350;
+    public static final int IMAGE_HEIGHT = 300;
+    public static final int IMAGE_WIDTH = 175;
 
     @Bind(R.id.birdOrderEditText) EditText mBirdOrderEditText;
     @Bind(R.id.birdFamilyEditText) EditText mBirdFamilyEditText;
