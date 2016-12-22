@@ -39,20 +39,22 @@
         <activity
             android:name=".ui.FeatherMapActivity"
             android:label="@string/title_activity_feather_map"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity android:name=".ui.LoginActivity" />
         <activity android:name=".ui.CreateUserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.NewSightingActivity"
-            android:parentActivityName=".ui.MainActivity"/>
+            android:parentActivityName=".ui.MainActivity" />
         <activity
             android:name=".ui.SightingDetailActivity"
-            android:parentActivityName=".ui.FeatherMapActivity"/>
+            android:parentActivityName=".ui.FeatherMapActivity" />
+        <activity android:name=".ui.SightingLocationActivity"></activity>
     </application>
 
 </manifest>

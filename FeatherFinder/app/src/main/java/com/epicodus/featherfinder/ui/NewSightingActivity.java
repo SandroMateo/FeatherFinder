@@ -34,6 +34,7 @@ import com.epicodus.featherfinder.Constants;
 import com.epicodus.featherfinder.R;
 import com.epicodus.featherfinder.models.Sighting;
 import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -63,6 +64,8 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
 
     private Bitmap mImage;
     private String mLocationProvider;
+    private String mLatitude;
+    private String mLongitude;
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
     private Location mLastKnownLocation;
@@ -84,6 +87,12 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
         mGetLocationButton.setOnClickListener(this);
         mBirdLogButton.setOnClickListener(this);
 
+        if(getIntent().hasExtra("latitude")) {
+            Intent intent = getIntent();
+            String sightingLatitude = intent.getStringExtra("latitude");
+            String sightingLongitude = intent.getStringExtra("longitude");
+        }
+
         ref = FirebaseDatabase.getInstance().getReference();
 
         mLocationProvider = LocationManager.NETWORK_PROVIDER;
@@ -98,11 +107,10 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             String family = mBirdFamilyEditText.getText().toString();
             String genus = mBirdGenusEditText.getText().toString();
             String species = mBirdSpeciesEditText.getText().toString();
-            String latitude = Double.toString(mCurrentLocation.getLatitude());
-            String longitude = Double.toString(mCurrentLocation.getLongitude());
             String timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm").format(Calendar.getInstance().getTime());
             String description = mBirdDescriptionEditText.getText().toString();
             String details = mBirdDetailsEditText.getText().toString();
+            boolean locationIsValid = locationIsValid(mLatitude, mLongitude);
             boolean imageIsValid = imageIsValid(mImage);
             boolean speciesIsValid = isValid(species, mBirdSpeciesEditText);
             boolean descriptionIsValid = isValid(description, mBirdDescriptionEditText);
@@ -110,7 +118,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
                 String image = encodeBitmap(mImage);
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uId = user.getUid();
-                Sighting newSighting = new Sighting(species, description, image, latitude, longitude, timestamp);
+                Sighting newSighting = new Sighting(species, description, image, mLatitude, mLongitude, timestamp);
                 saveSightingToDatabase(newSighting);
                 saveSightingToUser(uId, newSighting);
                 Intent intent = new Intent(NewSightingActivity.this, MainActivity.class);
@@ -127,12 +135,14 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
                 public void onLocationChanged(Location location) {
                     mCounter++;
                     mLocation = location;
-                    Log.v("location", mLocation.toString());
                     if(isBetterLocation(mLocation, mLastKnownLocation)) {
                         mCurrentLocation = mLocation;
                     } else {
                         mCurrentLocation = mLastKnownLocation;
                     }
+
+                    mLatitude = Double.toString(mCurrentLocation.getLatitude());
+                    mLongitude = Double.toString(mCurrentLocation.getLongitude());
 
                     if(mCounter == 1) {
                         Toast.makeText(NewSightingActivity.this, "Location Recorded!", Toast.LENGTH_SHORT).show();
@@ -162,7 +172,8 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
 
             }
         } else if(v == mDropPinButton) {
-
+            Intent intent = new Intent(NewSightingActivity.this, SightingLocationActivity.class);
+            startActivity(intent);
         }
 
     }
@@ -239,6 +250,15 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             return true;
         } else {
             Toast.makeText(NewSightingActivity.this, "Please upload an image or take a picture.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
+    private boolean locationIsValid(String latitude, String longitude) {
+        if(latitude != null && longitude != null) {
+            return true;
+        } else {
+            Toast.makeText(NewSightingActivity.this, "Please pinpoint a location.", Toast.LENGTH_LONG).show();
             return false;
         }
     }
