@@ -3,6 +3,7 @@ package com.epicodus.featherfinder.ui;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -73,6 +75,8 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
     private Location mCurrentLocation;
     private DatabaseReference ref;
     private int mCounter;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,8 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
         ButterKnife.bind(this);
 
         mCounter = 0;
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPreferences.edit();
         mDropPinButton.setOnClickListener(this);
         mUploadImageButton.setOnClickListener(this);
         mTakePhotoButton.setOnClickListener(this);
@@ -91,6 +97,10 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             Intent intent = getIntent();
             String sightingLatitude = intent.getStringExtra("latitude");
             String sightingLongitude = intent.getStringExtra("longitude");
+        }
+
+        if(mSharedPreferences.contains(Constants.PREFERENCES_DESCRIPTION_KEY)) {
+            populateWithSharedPreferences();
         }
 
         ref = FirebaseDatabase.getInstance().getReference();
@@ -114,7 +124,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             boolean imageIsValid = imageIsValid(mImage);
             boolean speciesIsValid = isValid(species, mBirdSpeciesEditText);
             boolean descriptionIsValid = isValid(description, mBirdDescriptionEditText);
-            if(speciesIsValid && descriptionIsValid && imageIsValid) {
+            if(speciesIsValid && descriptionIsValid && imageIsValid && locationIsValid) {
                 String image = encodeBitmap(mImage);
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uId = user.getUid();
@@ -129,6 +139,7 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
                 startActivity(intent);
             }
         } else if(v == mTakePhotoButton) {
+            addToSharedPreferences();
             onLaunchCamera();
         } else if(v == mGetLocationButton) {
             mLocationListener = new LocationListener() {
@@ -166,13 +177,14 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             }
         } else if(v == mUploadImageButton) {
             if (Environment.getExternalStorageState().equals("mounted")) {
+                addToSharedPreferences();
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(Intent.createChooser(intent, "Select Image: "), Constants.PICK_IMAGE_FROM_LIBRARY);
-
             }
         } else if(v == mDropPinButton) {
             Intent intent = new Intent(NewSightingActivity.this, SightingLocationActivity.class);
+            addToSharedPreferences();
             startActivity(intent);
         }
 
@@ -330,6 +342,64 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addToSharedPreferences() {
+        String order = mBirdOrderEditText.getText().toString();
+        String family = mBirdFamilyEditText.getText().toString();
+        String genus = mBirdGenusEditText.getText().toString();
+        String species = mBirdSpeciesEditText.getText().toString();
+        String description = mBirdDescriptionEditText.getText().toString();
+        String details = mBirdDetailsEditText.getText().toString();
+        mEditor.putString(Constants.PREFERENCES_ORDER_KEY, order).apply();
+        mEditor.putString(Constants.PREFERENCES_FAMILY_KEY, family).apply();
+        mEditor.putString(Constants.PREFERENCES_GENUS_KEY, genus).apply();
+        mEditor.putString(Constants.PREFERENCES_SPECIES_KEY, species).apply();
+        mEditor.putString(Constants.PREFERENCES_DESCRIPTION_KEY, description).apply();
+        mEditor.putString(Constants.PREFERENCES_DETAILS_KEY, details).apply();
+        if(mImage != null) {
+            String image = encodeBitmap(mImage);
+            mEditor.putString(Constants.PREFERENCES_IMAGE_KEY, image).apply();
+        }
+        if(mLatitude != null && mLongitude != null) {
+            mEditor.putString(Constants.PREFERENCES_LATITUDE_KEY, mLatitude).apply();
+            mEditor.putString(Constants.PREFERENCES_LONGITUDE_KEY, mLongitude).apply();
+        }
+
+    }
+
+    private void populateWithSharedPreferences() {
+        String order = mSharedPreferences.getString(Constants.PREFERENCES_ORDER_KEY, null);
+        String family = mSharedPreferences.getString(Constants.PREFERENCES_FAMILY_KEY, null);
+        String genus = mSharedPreferences.getString(Constants.PREFERENCES_GENUS_KEY, null);
+        String species = mSharedPreferences.getString(Constants.PREFERENCES_SPECIES_KEY, null);
+        String description = mSharedPreferences.getString(Constants.PREFERENCES_DESCRIPTION_KEY, null);
+        String details = mSharedPreferences.getString(Constants.PREFERENCES_DETAILS_KEY, null);
+        mBirdOrderEditText.setText(order);
+        mBirdFamilyEditText.setText(family);
+        mBirdGenusEditText.setText(genus);
+        mBirdSpeciesEditText.setText(species);
+        mBirdDescriptionEditText.setText(description);
+        mBirdDetailsEditText.setText(details);
+        if(mSharedPreferences.contains(Constants.PREFERENCES_IMAGE_KEY)) {
+            String image = mSharedPreferences.getString(Constants.PREFERENCES_IMAGE_KEY, null);
+            try {
+                Bitmap imageBitmap = decodeFromBase64(image);
+                mBirdSightImageView.setImageBitmap(imageBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(mSharedPreferences.contains(Constants.PREFERENCES_LATITUDE_KEY) && mSharedPreferences.contains(Constants.PREFERENCES_LONGITUDE_KEY)) {
+            mLatitude = mSharedPreferences.getString(Constants.PREFERENCES_LATITUDE_KEY, null);
+            mLongitude = mSharedPreferences.getString(Constants.PREFERENCES_LONGITUDE_KEY, null);
+        }
+
+    }
+
+    private Bitmap decodeFromBase64(String image) throws IOException {
+        byte[] decodedByteArray = android.util.Base64.decode(image, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
     }
 
     private void logout() {
