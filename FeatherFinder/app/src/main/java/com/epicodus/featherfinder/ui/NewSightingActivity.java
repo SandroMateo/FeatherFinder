@@ -103,10 +103,11 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             String timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm").format(Calendar.getInstance().getTime());
             String description = mBirdDescriptionEditText.getText().toString();
             String details = mBirdDetailsEditText.getText().toString();
-            String image = encodeBitmap(mImage);
-            boolean speciesIsValid = isValid(species, mBirdDescriptionEditText);
+            boolean imageIsValid = imageIsValid(mImage);
+            boolean speciesIsValid = isValid(species, mBirdSpeciesEditText);
             boolean descriptionIsValid = isValid(description, mBirdDescriptionEditText);
-            if(speciesIsValid && descriptionIsValid) {
+            if(speciesIsValid && descriptionIsValid && imageIsValid) {
+                String image = encodeBitmap(mImage);
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String uId = user.getUid();
                 Sighting newSighting = new Sighting(species, description, image, latitude, longitude, timestamp);
@@ -160,6 +161,8 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(Intent.createChooser(intent, "Select Image: "), Constants.PICK_IMAGE_FROM_LIBRARY);
 
             }
+        } else if(v == mDropPinButton) {
+
         }
 
     }
@@ -229,6 +232,15 @@ public class NewSightingActivity extends AppCompatActivity implements View.OnCli
             return false;
         }
         return true;
+    }
+
+    private boolean imageIsValid(Bitmap image) {
+        if(image != null) {
+            return true;
+        } else {
+            Toast.makeText(NewSightingActivity.this, "Please upload an image or take a picture.", Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 
     private String encodeBitmap(Bitmap bitmap) {
