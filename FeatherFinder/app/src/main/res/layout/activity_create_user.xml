@@ -86,7 +86,8 @@
             android:layout_height="wrap_content"
             android:text="Back to Login page"
             android:textAlignment="center"
-            android:textSize="10sp"
+            android:textColor="@color/primary"
+            android:textSize="15sp"
             android:id="@+id/loginTextView"/>
     </LinearLayout>
 

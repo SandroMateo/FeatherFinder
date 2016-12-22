@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
-        app:srcCompat="@drawable/background2"
+        app:srcCompat="@drawable/ic_photo_camera_white_48dp"
         android:scaleType="centerCrop"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -21,6 +21,7 @@
         android:text="TextView"
         android:textSize="30sp"
         android:layout_width="wrap_content"
+        android:textColor="@color/primaryText"
         android:layout_height="wrap_content"
         android:id="@+id/sightingSpeciesTextView"
         android:layout_below="@+id/sightingImageView"
@@ -32,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
+        android:textColor="@color/primaryText"
         android:layout_margin="20dp"
         android:textSize="20sp"
         android:id="@+id/sightingDescriptionTextView"
@@ -46,20 +48,13 @@
         android:layout_below="@+id/sightingDescriptionTextView"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:text="Message Bird Spotter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/messageSpotterButton" />
-
     <TextView
         android:text="Location"
         android:textSize="24sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_place_black_24dp"
+        android:textColor="@color/primaryText"
         android:id="@+id/sightingLocationTextView"
         android:layout_marginTop="49dp"
         android:layout_alignParentTop="true"
@@ -77,6 +72,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/sightingTimestampTextView"
         android:layout_alignParentTop="true"
+        android:textColor="@color/primaryText"
         android:layout_toRightOf="@+id/sightingSpeciesTextView"
         android:layout_toEndOf="@+id/sightingSpeciesTextView"
         android:layout_marginLeft="17dp"

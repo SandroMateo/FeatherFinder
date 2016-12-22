@@ -19,6 +19,7 @@
     <Button
         android:text="Find Birds"
         android:layout_width="match_parent"
+        android:textColor="@color/primaryText"
         android:layout_height="wrap_content"
         android:id="@+id/findBirdsButton"
         android:layout_alignParentBottom="true"
@@ -29,6 +30,7 @@
         android:text="Record Sighting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/primaryText"
         android:layout_above="@+id/findBirdsButton"
         android:layout_centerHorizontal="true"
         android:id="@+id/recordSightingButton" />
