@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.epicodus.featherfinder.Constants;
 import com.epicodus.featherfinder.R;
@@ -48,12 +49,12 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
     private Location mLocation;
     private LatLng mCurrentLocation;
     private boolean mSetToCurrentLocation = true;
+    private Marker userMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feather_map);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -73,8 +74,8 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
                 }
 
                 if(mMap != null && mSetToCurrentLocation) {
-                    mMap.addMarker(new MarkerOptions().position(mCurrentLocation).title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).flat(true));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(mCurrentLocation));
+                    userMarker = mMap.addMarker(new MarkerOptions().position(mCurrentLocation).title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).flat(true));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, Constants.MAPS_ZOOM_LEVEL));
                     mSetToCurrentLocation = false;
                 }
             }
@@ -96,16 +97,6 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
         }
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -135,9 +126,11 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        Sighting sighting = (Sighting) marker.getTag();
-        Log.v("sighting", sighting.getSpecies());
-        if(sighting != null) {
+        if(marker.getTitle().equals("You")) {
+            Toast.makeText(FeatherMapActivity.this, "You found yourself!", Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            Sighting sighting = (Sighting) marker.getTag();
             Intent intent = new Intent(FeatherMapActivity.this, SightingDetailActivity.class);
             intent.putExtra("sighting", Parcels.wrap(sighting));
             startActivity(intent);
@@ -210,31 +203,4 @@ public class FeatherMapActivity extends FragmentActivity implements OnMapReadyCa
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if(id == R.id.action_logout) {
-            logout();
-            return true;
-        } else if (id == R.id.action_sighting) {
-            Intent intent = new Intent(FeatherMapActivity.this, NewSightingActivity.class);
-            startActivity(intent);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void logout() {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(FeatherMapActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
 }
